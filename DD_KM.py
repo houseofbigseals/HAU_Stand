@@ -3,6 +3,11 @@ import matplotlib.pyplot as plt
 from scipy.optimize import curve_fit
 import numpy as np
 
+
+ # TODO get all back and change y and x back
+ # TODO replace x and y!!!!!!
+
+
 # data
 # stable measured data - y
 
@@ -19,7 +24,7 @@ press_4 = [0.89, 1.66, 2.40, 3.14, 3.87, 4.56]
 press_5 = [0.88, 1.65, 2.39, 3.09, 3.82, 4.56]
 
 full_s4_data = np.array([*press_1, *press_2, *press_3, *press_4, *press_5])
-full_y_data = np.array([*pressure, *pressure, *pressure, *pressure, *pressure])
+full_x_data = np.array([*pressure, *pressure, *pressure, *pressure, *pressure])
 
 # sensor 3, V
 
@@ -55,25 +60,28 @@ def draw_s4_plot():
     def lin_func(t, a, b):
         return a*t + b
 
-    print(len(full_y_data))
+    print(len(full_x_data))
     print(len(full_s4_data))
-    popt, r2 = approximation_with_r2(lin_func, full_s4_data, full_y_data)
+    popt, r2 = approximation_with_r2(lin_func, full_x_data, full_s4_data)
     a = popt[0]
     b = popt[1]
     print(popt, r2)
 
-    plt.plot(press_1, pressure,   'ob')
-    plt.plot(press_2, pressure,  'ob')
-    plt.plot(press_3, pressure,  'ob')
-    plt.plot(press_4, pressure,  'ob')
-    plt.plot(press_5, pressure,  'ob', label="Data")
+    yerr = np.ones(np.shape(full_x_data)[0]) * 0.03
 
-    line_label = f"Linear approximation y = {a:.3}*x + {b:.3}, R2 = {r2:.4}"
+    plt.plot(full_x_data, full_s4_data,  'ob', label="Данные")
+    plt.errorbar(full_x_data, full_s4_data, yerr=yerr, #fmt='v',
+                               linestyle='', color='b', label='Погрешность измерения', capsize=5)
 
-    plt.plot(press_1, lin_func(np.array(press_1), *popt), '-vr', label=line_label)
+    line_label = f"Аппроксимация y = {a:.3}*x + {b:.3}, R2 = {r2:.4}"
+
+    fake_x_data = np.arange(-5, 0, 0.02)
+    plt.plot(fake_x_data, lin_func(np.array(fake_x_data), *popt), '-r', label=line_label)
+
+
 
     plt.ylabel('Разрежение, кПа')
-    plt.xlabel('Показания датчика давления, V')
+    plt.xlabel('Показания датчика давления, В')
     plt.title("Калибровка датчика давления №4")
     plt.legend(loc='upper left')
     plt.grid()
@@ -85,29 +93,33 @@ def draw_s3_plot():
     def lin_func(t, a, b):
         return a*t + b
 
-    print(len(full_y_data))
+    print(len(full_x_data))
     print(len(full_s3_data))
-    popt, r2 = approximation_with_r2(lin_func, full_s3_data, full_y_data)
+    popt, r2 = approximation_with_r2(lin_func, full_x_data, full_s3_data)
     a = popt[0]
     b = popt[1]
     print(popt, r2)
 
-    plt.plot(press_6, pressure,   'ob')
-    plt.plot(press_7, pressure,  'ob')
-    plt.plot(press_8, pressure,  'ob')
-    plt.plot(press_9, pressure,  'ob')
-    plt.plot(press_10, pressure,  'ob', label="Data")
+    yerr = np.ones(np.shape(full_x_data)[0]) * 0.03
 
-    line_label = f"Linear approximation y = {a:.3}*x + {b:.3}, R2 = {r2:.4}"
+    plt.plot(full_x_data, full_s3_data,  'ob', label="Данные")
+    plt.errorbar(full_x_data, full_s3_data, yerr=yerr, #fmt='v',
+                               linestyle='', color='b', label='Погрешность измерения', capsize=5)
 
-    plt.plot(press_10 , lin_func(np.array(press_10), *popt), '-vr', label=line_label)
+    line_label = f"Аппроксимация y = {a:.3}*x + {b:.3}, R2 = {r2:.4}"
+
+    fake_x_data = np.arange(-5, 0, 0.02)
+    plt.plot(fake_x_data, lin_func(np.array(fake_x_data), *popt), '-r', label=line_label)
+
+
 
     plt.ylabel('Разрежение, кПа')
-    plt.xlabel('Показания датчика давления, V')
+    plt.xlabel('Показания датчика давления, В')
     plt.title("Калибровка датчика давления №3")
     plt.legend(loc='upper left')
     plt.grid()
     plt.show()
+
 
 
 
